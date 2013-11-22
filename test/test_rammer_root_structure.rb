@@ -12,14 +12,14 @@ class TestRammerRootStructure < Test::Unit::TestCase
   def test_generator_directory_name
     Dir.chdir("#{$test_file_root}")
     dir_path = Dir.pwd
-    generator = Rammer::Generator.new(" ")
+    generator = Rammer::RammerGenerator.new(" ")
     generator.run
     assert_equal(false, File.directory?("#{dir_path}/ "))
   end
 
   def test_generator_reserved_directory_name
     dir_path = Dir.pwd
-    generator = Rammer::Generator.new("rammer")
+    generator = Rammer::RammerGenerator.new("rammer")
     generator.run
     expected_valid_name_attr = false
     assert_equal(expected_valid_name_attr, generator.valid_name)
@@ -28,7 +28,7 @@ class TestRammerRootStructure < Test::Unit::TestCase
   def test_generator_root_directory
     dir_path = Dir.pwd
     FileUtils.rm_r "#{dir_path}/#{$test_file}" if File.directory?("#{dir_path}/#{$test_file}")
-    generator = Rammer::Generator.new("#{$test_file}")
+    generator = Rammer::RammerGenerator.new("#{$test_file}")
     generator.run
     expected_root = "#{dir_path}/#{$test_file}"    
     assert_equal(expected_root, generator.target_dir)
@@ -36,7 +36,7 @@ class TestRammerRootStructure < Test::Unit::TestCase
 
   def test_generator_root_directory_exisiting
     dir_path = Dir.pwd
-    generator = Rammer::Generator.new("#{$test_file}")
+    generator = Rammer::RammerGenerator.new("#{$test_file}")
     generator.run
     assert_equal(true, File.directory?("#{dir_path}/#{$test_file}"))
   end

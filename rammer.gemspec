@@ -15,6 +15,8 @@ Gem::Specification.new do |spec|
 
   spec.files         = ["lib/rammer.rb",
                         "lib/rammer/version.rb",
+                        "lib/rammer/rammer_generator",
+                        "lib/rammer/module_generator",
                         "lib/template/01_create_users.rb",
                         "lib/template/02_create_sessions.rb",
                         "lib/template/03_create_owners.rb",

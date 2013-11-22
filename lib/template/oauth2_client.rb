@@ -43,11 +43,7 @@ class Oauth2Client < ActiveRecord::Base
         @auth = Songkick::OAuth2::Provider::Authorization.new(@owner, params)
         @authenticated_owner = Oauth2Authorization.find_by_oauth2_resource_owner_id_and_oauth2_client_id(@owner.id,@auth.client.id)
         unless @authenticated_owner
-          @oauth2_authorization_instance = Oauth2Authorization.new()
-          @instance = @oauth2_authorization_instance.get_token(@auth.owner, @auth.client,
-                    :response_type => "code",
-                    :scope => params["scope"].present? ? params["scope"] : nil,
-                    :duration => params["duration"].present? ? params["duration"] : 3600)   
+          @instance = obtain_token(params, @auth)
         else
           @instance = @authenticated_owner
         end
@@ -79,11 +75,7 @@ class Oauth2Client < ActiveRecord::Base
         @auth = Songkick::OAuth2::Provider::Authorization.new(@owner, params)
         @authenticated_owner = Oauth2Authorization.find_by_oauth2_resource_owner_id_and_oauth2_client_id(@owner.id,@auth.client.id)
         unless @authenticated_owner
-          @oauth2_authorization_instance = Oauth2Authorization.new()
-          @instance = @oauth2_authorization_instance.get_token(@auth.owner, @auth.client,
-                    :response_type => "token",
-                    :scope => params["scope"].present? ? params["scope"] : nil,
-                    :duration => params["duration"].present? ? params["duration"] : 3600)   
+          @instance = obtain_token(params, @auth)   
         else
           @instance = @authenticated_owner
         end
@@ -145,5 +137,14 @@ class Oauth2Client < ActiveRecord::Base
   def generate_keys
     self.client_id = OAuth::Helper.generate_key(40)[0,40]
     self.client_secret_hash = OAuth::Helper.generate_key(40)[0,40]
+  end
+
+  def obtain_token(params, @auth)
+    @oauth2_authorization_instance = Oauth2Authorization.new()
+    @instance = @oauth2_authorization_instance.get_token(@auth.owner, @auth.client,
+              :response_type => "code",
+              :scope => params["scope"].present? ? params["scope"] : nil,
+              :duration => params["duration"].present? ? params["duration"] : 3600)
+    return @instance
   end
 end
